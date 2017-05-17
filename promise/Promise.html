@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script>
+            //用Promise对象实现的Ajax操作的例子
+            var getJOSN = function(url){
+                var promiseAjax = new Promise(function(resolve, reject){
+                    var client = new XMLHttpRequest();
+                    client.open("GET", url);
+                    client.onreadystatechange = handler;
+                    client.responseType = "json";
+                    client.setRequestHeader("Accept","application/json");
+                    client.send();
+                    function handler(){
+                        if(this.readyState !== 4){
+                            return;
+                        }
+                        if(this.status === 200){
+                            resolve(this.response);
+                        }else{
+                            reject(new Error(this.statusText));
+                        }
+                    }
+                });
+                return promiseAjax;
+            }
+
+            getJOSN("http://www.jianshu.com/notes/063f7e490e9a/mark_viewed.json").then(function(json){
+                console.log("Conents:"+json);
+            },function(error){
+                console.log('ErrorText:', error)
+            })
+            getJOSN("./Promise.json").then(function(json){
+                console.log("Conents:"+json);
+                var content = document.getElementById("content");
+                content.innerHTML = json.data[0].name;
+            },function(error){
+                console.log('ErrorText:', error)
+            })
+        </script>
+    </head>
+    <body>
+    	
+    	<div class="content" id="content">
+    		
+    	</div>
+    
+    </body>
+</html>
