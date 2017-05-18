@@ -39,6 +39,20 @@
                 content.innerHTML = json.data[0].name;
             },function(error){
                 console.log('ErrorText:', error)
+            });
+
+            getJOSN("./Promise.json").then(function(json){
+                console.log(json)
+                return json.data;
+            }).then(function(post){
+                console.log('data:', post);
+                
+                return new Promise(function(resolve, reject){
+                    console.log('Promise Inner')
+                    resolve("post promise data");
+                });
+            }).then(function(data){
+                console.log("Three::", data)
             })
         </script>
     </head>
