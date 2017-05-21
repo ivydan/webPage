@@ -155,9 +155,54 @@ process.on('unhandleRejection', function(err, p){
 })
 
 //Promise.all() 方法用于将多个Promise实例，包装成一个新的Promise实例
-var p = Promise.all([p1, p2, p3]);
+//var p = Promise.all([p1, p2, p3]);
 //p1, p2, p3都是Promise对象的实例如果不是就会先调用Promise.resolved方法转换成Promise实例，再进一步处理。
 //Promise.all方法参数可不是数组，但是必须是具备Iterator接口， 且返回的每个成员都是Promise实例。
+
+//Promise.race() 同样是将多个Promise实例，包装成一个新的Promise
+//var p = Promise.ract([p1,p2,p3])
+//只要p1,p2,p3中有一个实例率先改变状态，p的状态就跟着改变，那个率先改变的promise实例的返回值就传递给p的回掉函数
+Promise.prototype.done = function(onFulfilled, onRejected){
+    this.then(onFulfilled, onRejected)
+    .catch(function(reason){
+        setTimeout(()=>{throw reason}, 0);
+    })
+};
+
+Promise.prototype.finally = function(callback){
+    var p = this.constructor;
+    return this.then(
+        value => p.resolve(callback()).then(()=>value),
+        reason => p.resolve(callback()).then(()=>{throw reason})
+    );
+};
+
+var promiseTest = new Promise(function(resolve, reject){
+    setTimeout(function(){
+        //resolve("success Data!");
+    },3000);
+    setTimeout(function(){
+        reject(new Error("it is a error!"));
+    },6000)
+})
+
+promiseTest.then(function(data){
+    console.log(data)
+}).catch(function(err){
+    console.log('Catch:',err)
+}).then(function(){
+    console.log('other Error')
+    Promise.reject(new Error("abc"))
+}).finally(function(data,err){
+    console.log("----");
+    console.log(data, err)
+})
+
+//done() Promise对象的回掉链， 不管以then方法或catch方法结尾， 要是最后一个方法抛出错误， 都有可能无法捕获到
+//因为promise内部错误不会冒泡到全局。 因此，我们可以提供一个done方法，总是处于回掉链的尾部。保证抛出任何可能出现的错误
+
+//finally() 用于指定不管Promise对象最后状态如何，都会执行的操作， 它与done方法的最大区别。他接受一个普通的回掉函数作为参数。该函数不管怎么样都必须执行
+
 
 
 

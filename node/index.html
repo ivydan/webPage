@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/style.css" rel="stylesheet">
+        <script>
+            console.log(1111);
+            var getJOSN = function(url){
+                var promiseAjax = new Promise(function(resolve, reject){
+                    var client = new XMLHttpRequest();
+                    client.open("GET", url);
+                    client.onreadystatechange = handler;
+                    client.responseType = "json";
+                    client.setRequestHeader("Accept","application/json");
+                    client.send();
+                    function handler(){
+                        if(this.readyState !== 4){
+                            return;
+                        }
+                        if(this.status === 200){
+                            resolve(this.response);
+                        }else{
+                            reject(new Error(this.statusText));
+                        }
+                    }
+                });
+                return promiseAjax;
+            }
+
+            getJOSN("http://192.168.0.100:8080/note_mysql/notebook/loadbooks.do?userId=f841d1bc-693f-44cd-b08c-00d8a72caaed").then(function(json){
+                console.log("Conents:"+json);
+            },function(error){
+                console.log('ErrorText:', error)
+            })
+
+            // getJOSN("./data.json").then(function(response){
+            //     console.log(response)
+            // })
+
+            var jsPromise = Promise.resolve(getJOSN("./data.json"));
+            console.log(jsPromise)
+
+        </script>
+    </head>
+    <body>
+    node server
+    </body>
+</html>
