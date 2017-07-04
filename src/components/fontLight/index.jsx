@@ -7,10 +7,17 @@ export default class Index extends React.Component{
 	}
 
 	render(){
+		let className = this.props.className ? 
+			`fd-font-light ${this.props.className}` :
+			"fd-font-light";
+		let { test, color } = this.props;
 		return (
-			<div className="fd-font-light">
-				<span className="lignt-txt">{this.props.test}</span>
-				<div className="lignt-bgc"></div>
+			<div className={className}>
+				<span className="lignt-txt" data-text={test}>{test}</span>
+				<div className="lignt-bgc" style={
+					color ? {background: `linear-gradient(45deg, ${color[0]}, ${color[1]})`}
+					:{}
+				}></div>
 				<div className="lignt-ani"></div>
 			</div>
 			)

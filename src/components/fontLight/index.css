@@ -1,12 +1,12 @@
 .fd-font-light{
-	margin: 24px;
-	font-size: 40px;
+	margin: 5px;
+	font-size: 36px;
 	position: relative;
 	right: -1px;
 	display: inline-block;
-	font-family: monospace;
+	font-family: sans-serif;
 	background: #000;
-	padding: 20px;
+	padding: 10px 20px;
 	overflow: hidden;
 	filter: contrast(110%) brightness(190%);
 }
@@ -17,8 +17,8 @@
 	color: transparent;
 	text-transform: uppercase;
 }
-.fd-font-light .lignt-txt::before, .fd-font-light .lignt-txt::after{
-	content: "FD-TEST";
+.fd-font-light .lignt-txt[data-text]::before, .fd-font-light .lignt-txt[data-text]::after{
+	content: attr(data-text);
 	color: white;
 	filter: blur(0.02em);
 	position: absolute;
