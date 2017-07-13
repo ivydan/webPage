@@ -7,21 +7,26 @@ import React from 'react';
 import ReactDom from 'react-dom';
 
 import Font from '../components/fontLight/index';
-import FontTest from '../components/fontTest/index';
+// import FontTest from '../components/fontTest/index';
 import Wood from '../components/wood/index';
+
+import { FontLight } from "fdcomponent";
 
 import "./index.css";
 
-class App extends React.Component{
-	constructor(props){
+class App extends React.Component {
+	constructor(props) {
 		super(props);
 	}
 
-	render(){
-		return(
+	componentDidMount(){
+	}
+
+	render() {
+		return (
 			<div className="container">
 				<div className="fd-title">
-					<Font test="WebSite" color={["#6688ef", "#71ef30"]} />
+					<FontLight test="WebSiteDA" color={["#6688ef", "#71ef30"]} />
 				</div>
 				{/*<Wood />*/}
 				<div className="fd-flow">
