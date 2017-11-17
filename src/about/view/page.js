@@ -3,7 +3,7 @@
 // //css-loader 检查css代码代码中的import语句找到依赖并合并
 // document.body.appendChild(document.createElement("div"));
 
-// import React from 'react';
+import React from 'react';
 import _ from 'lodash';
 
 export default class App extends React.Component {
@@ -16,8 +16,8 @@ export default class App extends React.Component {
 
 	render() {
 		return (
-			<div className="container">
-				<a href="../about/index.html">about</a>
+			<div className="AboutContain">
+				<a href="../page/index.html">page</a>
 			</div>
 		)
 	}

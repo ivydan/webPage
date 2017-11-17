@@ -17,7 +17,7 @@ export default class App extends React.Component {
 	render() {
 		return (
 			<div className="container">
-				<a href="../about/index.html">about</a>
+				page
 			</div>
 		)
 	}

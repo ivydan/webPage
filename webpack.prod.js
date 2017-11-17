@@ -5,16 +5,8 @@ const common = require('./webpack.common.js');
 const webpack = require('webpack');
 
 module.exports = merge(common,{
-	// externals:[{
- //        "react": "react",
- //        "react-dom": "react-dom",
- //        "lodash": "lodash"
- //    }],
 	plugins: [
-		// new UglifyJSPlugin(),
-		new CleanWebpackPlugin(),
-		new webpack.optimize.CommonsChunkPlugin({
-		    name: 'common' //提取公共模块-放置重复
-		})
+		new UglifyJSPlugin(),
+		new CleanWebpackPlugin()
 	]
 })

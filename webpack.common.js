@@ -9,53 +9,58 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+
+const node_modules = path.resolve(__dirname, 'node_modules');
+const pathToReact = path.resolve(node_modules, 'react/dist/react.min.js');
+
 var commonPlugins = [];
+//入口文件。
 var getEntry = function(){
     var entry = {};
     glob.sync('./src/**/index.js').forEach(function(name){
         var n = name.slice(name.lastIndexOf('src/') + 4, name.length - 3);
         n = n.slice(0, n.lastIndexOf('/'));
         entry[n] = name;
-        //插件扩展
-        commonPlugins.push(new HtmlWebpackPlugin({
-            title: `Web Page ${n}`,
-            filename: `${n}/${n}.html`,
-            files:  {
-                js: [`./${n}.js`]
-            }
-        }));
     });
     console.info("entry:", entry);
     return entry;
 }
 
+let entry = getEntry();
+
 /////其他插件
-
-//模块热替换 //无效待优化
-//new webpack.HotModuleReplacementPlugin()
-
+//new webpack.HotModuleReplacementPlugin()//模块热替换 //无效待优化
 const otherPlugin = [
-    new ExtractTextPlugin("./[name]/style.css"),
+    new ExtractTextPlugin("style.css"),
     new webpack.BannerPlugin('This is a SD System for Test !'), //插件用于给文件头部加注释信息
+    new HtmlWebpackPlugin({
+        title: `Web Page`,
+        filename: `index.html`,
+        template: path.join(__dirname, 'index.html')
+    })
 ]
 
 commonPlugins = commonPlugins.concat(otherPlugin);
 
 module.exports = {
-    entry: getEntry(),
+    entry: entry,
     output:{
         path: path.resolve(__dirname, "./build/"),
-        filename: '[name]/index.js',
+        filename: '[name].js',
+        library: '[name]',
+        libraryTarget: "umd"
     },
     resolve:{
         extensions:['.js','.jsx','.json'],
         alias:{
-            routes: path.resolve(__dirname, 'util/routes.js'),
-            auth: path.resolve(__dirname, 'util/auth.js'),
-            utils: path.resolve(__dirname, 'util/utils.js'),
-            components: path.resolve(__dirname, 'components')
+            components: path.resolve(__dirname, 'components') 
         }
     },
+    externals:[{
+        "react": "React",
+        "react-dom": "ReactDOM",
+        "lodash": "lodash"
+    }],
     module:{
         loaders:[
             {
@@ -65,24 +70,34 @@ module.exports = {
                 query:{
                   presets:['react','es2015']
                 }
-            // },{
-            //     test: /\.less$/i,
-            //     use: ExtractTextPlugin.extract([ 'css-loader', 'less-loader' ])
             },{
-                test: /\.less$/i,
-                use: ExtractTextPlugin.extract({  
-                    fallback: 'style-loader',  
-                    use: [  
-                        'css-loader',  
-                        'postcss',  
-                        'less-loader'  
-                    ]  
-                })  
+                test: /\.css$/,
+                exclude: /^node_modules$/,
+			      use: ExtractTextPlugin.extract({
+				      fallback: "style-loader",
+				      use: [
+					      { loader: 'css-loader', options: { importLoaders: 1 } },
+					      'postcss-loader'
+				      	]
+			      })
+            }, {
+                test: /\.less/,
+                exclude: /^node_modules$/,
+			      use: ExtractTextPlugin.extract({
+				      fallback: "style-loader",
+				      use: [
+					      { loader: 'css-loader', options: { importLoaders: 1 } },
+					      'postcss-loader',
+					      {
+						      loader: 'less-loader'
+					      }
+				      ]
+			      })
             },{ 
                 test: /\.(png|jpg)$/, 
                 loader: 'url-loader?limit=8192' 
             }
-        ]
+        ],
     },
     plugins: commonPlugins
 }

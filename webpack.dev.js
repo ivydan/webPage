@@ -6,7 +6,7 @@ module.exports = merge(common, {
 	// devtool: 'inline-source-map'  //编译速度较慢
     devtool: 'eval-source-map',
     plugins: [
-    	new OpenBrowserPlugin({url: 'http://localhost:8080'})
+    	new OpenBrowserPlugin({url: 'http://localhost:8080/index.html'})
     ],
     
 });
